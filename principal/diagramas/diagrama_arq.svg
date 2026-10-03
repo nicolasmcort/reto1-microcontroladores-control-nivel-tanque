@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1536.0 728.0" width="1536" height="728">
+<defs><marker id="arrow" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 Z" fill="#343a40"/></marker></defs>
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="28.0" y="51.8" fill="#1e1e1e" font-family="Segoe UI, Arial, sans-serif" font-size="28" font-weight="700" text-anchor="start">
+<tspan x="28.0" dy="0">Arquitectura — Control de nivel de un tanque</tspan>
+</text>
+<text x="28.0" y="79.6" fill="#495057" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" text-anchor="start">
+<tspan x="28.0" dy="0">Ejercicio 2  ·  Reto 1  ·  Microcontroladores 2026-2  ·  ESP32  ·  MicroPython</tspan>
+</text>
+<text x="28.0" y="129.6" fill="#1971c2" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" text-anchor="start">
+<tspan x="28.0" dy="0">ENTRADAS</tspan>
+</text>
+<text x="508.0" y="129.6" fill="#e8590c" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" text-anchor="start">
+<tspan x="508.0" dy="0">PROCESAMIENTO</tspan>
+</text>
+<text x="1048.0" y="129.6" fill="#2b8a3e" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" text-anchor="start">
+<tspan x="1048.0" dy="0">SALIDAS</tspan>
+</text>
+<rect x="28.0" y="148.0" width="420.0" height="168.0" rx="12" fill="#d0ebff" stroke="#1971c2" stroke-width="2"/>
+<text x="44.0" y="177.0" fill="#1971c2" font-family="Segoe UI, Arial, sans-serif" font-size="20" font-weight="700" text-anchor="start">
+<tspan x="44.0" dy="0">Potenciómetro · Nivel L</tspan>
+</text>
+<text x="44.0" y="203.6" fill="#1e1e1e" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" text-anchor="start">
+<tspan x="44.0" dy="0">GPIO 34  ·  ADC1 canal 6</tspan>
+<tspan x="44.0" dy="20.0">Solo entrada, sin pull interno</tspan>
+<tspan x="44.0" dy="20.0">0 a 3,3 V  →  0 a 4095</tspan>
+<tspan x="44.0" dy="20.0">Escala: 0 a 200 cm</tspan>
+</text>
+<rect x="28.0" y="340.0" width="420.0" height="168.0" rx="12" fill="#d0ebff" stroke="#1971c2" stroke-width="2"/>
+<text x="44.0" y="369.0" fill="#1971c2" font-family="Segoe UI, Arial, sans-serif" font-size="20" font-weight="700" text-anchor="start">
+<tspan x="44.0" dy="0">Potenciómetro · Setpoint SP</tspan>
+</text>
+<text x="44.0" y="395.6" fill="#1e1e1e" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" text-anchor="start">
+<tspan x="44.0" dy="0">GPIO 35  ·  ADC1 canal 7</tspan>
+<tspan x="44.0" dy="20.0">Segundo canal, independiente de L</tspan>
+<tspan x="44.0" dy="20.0">0 a 3,3 V  →  0 a 4095</tspan>
+<tspan x="44.0" dy="20.0">Escala: 50 a 180 cm</tspan>
+</text>
+<rect x="28.0" y="532.0" width="420.0" height="168.0" rx="12" fill="#e7f5ff" stroke="#1971c2" stroke-width="2"/>
+<text x="44.0" y="561.0" fill="#1971c2" font-family="Segoe UI, Arial, sans-serif" font-size="20" font-weight="700" text-anchor="start">
+<tspan x="44.0" dy="0">Pulsador · Habilitar</tspan>
+</text>
+<text x="44.0" y="587.6" fill="#1e1e1e" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" text-anchor="start">
+<tspan x="44.0" dy="0">GPIO 18  ·  entrada digital</tspan>
+<tspan x="44.0" dy="20.0">Pull-up interno, activo en bajo</tspan>
+<tspan x="44.0" dy="20.0">Cada pulsación alterna el estado</tspan>
+<tspan x="44.0" dy="20.0">Antirrebote de 200 ms</tspan>
+</text>
+<rect x="508.0" y="148.0" width="480.0" height="552.0" rx="12" fill="#fff4e6" stroke="#e8590c" stroke-width="2"/>
+<text x="532.0" y="182.7" fill="#d9480f" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="700" text-anchor="start">
+<tspan x="532.0" dy="0">ESP32 </tspan>
+</text>
+<text x="532.0" y="206.8" fill="#868e96" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" text-anchor="start">
+<tspan x="532.0" dy="0">MicroPython  ·  bucle cada 150 ms</tspan>
+</text>
+<rect x="532.0" y="218.0" width="432.0" height="104.0" rx="12" fill="#ffffff" stroke="#f08c00" stroke-width="2"/>
+<text x="548.0" y="243.3" fill="#d9480f" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="400" text-anchor="start">
+<tspan x="548.0" dy="0">1  ·  Adquisición</tspan>
+</text>
+<text x="548.0" y="266.8" fill="#1e1e1e" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" text-anchor="start">
+<tspan x="548.0" dy="0">Lee GPIO 34 y GPIO 35 con atenuación 11 dB.</tspan>
+<tspan x="548.0" dy="18.8">Lee GPIO 18 y actualiza habilitado / deshabilitado.</tspan>
+</text>
+<rect x="532.0" y="334.0" width="432.0" height="104.0" rx="12" fill="#ffffff" stroke="#f08c00" stroke-width="2"/>
+<text x="548.0" y="359.3" fill="#d9480f" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="400" text-anchor="start">
+<tspan x="548.0" dy="0">2  ·  Escalamiento</tspan>
+</text>
+<text x="548.0" y="382.8" fill="#1e1e1e" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" text-anchor="start">
+<tspan x="548.0" dy="0">L = (cuenta / 4095) × 200 cm</tspan>
+<tspan x="548.0" dy="18.8">SP = 50 + (cuenta / 4095) × 130 cm</tspan>
+</text>
+<rect x="532.0" y="450.0" width="432.0" height="104.0" rx="12" fill="#ffffff" stroke="#f08c00" stroke-width="2"/>
+<text x="548.0" y="475.3" fill="#d9480f" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="400" text-anchor="start">
+<tspan x="548.0" dy="0">3  ·  Decisión</tspan>
+</text>
+<text x="548.0" y="498.8" fill="#1e1e1e" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" text-anchor="start">
+<tspan x="548.0" dy="0">Deshabilitado: PWM 0 % y ambos LED apagados.</tspan>
+<tspan x="548.0" dy="18.8">L &gt; 190 cm: alarma, antes que las bandas de SP.</tspan>
+<tspan x="548.0" dy="18.8">Si no: PWM 0, 25, 50, 75 o 100 % según L y SP.</tspan>
+</text>
+<rect x="532.0" y="566.0" width="432.0" height="104.0" rx="12" fill="#ffffff" stroke="#f08c00" stroke-width="2"/>
+<text x="548.0" y="591.3" fill="#d9480f" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="400" text-anchor="start">
+<tspan x="548.0" dy="0">4  ·  Actuación</tspan>
+</text>
+<text x="548.0" y="614.8" fill="#1e1e1e" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" text-anchor="start">
+<tspan x="548.0" dy="0">Escribe LED, DAC de 8 bits y PWM de la bomba.</tspan>
+<tspan x="548.0" dy="18.8">Imprime L, SP, DAC, duty y el estado de los LED.</tspan>
+</text>
+<rect x="1048.0" y="148.0" width="460.0" height="123.0" rx="12" fill="#d3f9d8" stroke="#2b8a3e" stroke-width="2"/>
+<text x="1064.0" y="177.0" fill="#2b8a3e" font-family="Segoe UI, Arial, sans-serif" font-size="20" font-weight="700" text-anchor="start">
+<tspan x="1064.0" dy="0">LED verde · sistema habilitado</tspan>
+</text>
+<text x="1064.0" y="203.6" fill="#1e1e1e" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" text-anchor="start">
+<tspan x="1064.0" dy="0">GPIO 4  ·  salida digital</tspan>
+<tspan x="1064.0" dy="20.0">Resistencia 270 Ω hacia el ánodo</tspan>
+</text>
+<rect x="1048.0" y="291.0" width="460.0" height="123.0" rx="12" fill="#ffe3e3" stroke="#c92a2a" stroke-width="2"/>
+<text x="1064.0" y="320.0" fill="#c92a2a" font-family="Segoe UI, Arial, sans-serif" font-size="20" font-weight="700" text-anchor="start">
+<tspan x="1064.0" dy="0">LED rojo · alarma de nivel alto</tspan>
+</text>
+<text x="1064.0" y="346.6" fill="#1e1e1e" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" text-anchor="start">
+<tspan x="1064.0" dy="0">GPIO 2  ·  salida digital</tspan>
+<tspan x="1064.0" dy="20.0">Resistencia 330 Ω  ·  L &gt; 190 cm</tspan>
+</text>
+<rect x="1048.0" y="434.0" width="460.0" height="123.0" rx="12" fill="#e5dbff" stroke="#5f3dc4" stroke-width="2"/>
+<text x="1064.0" y="463.0" fill="#5f3dc4" font-family="Segoe UI, Arial, sans-serif" font-size="20" font-weight="700" text-anchor="start">
+<tspan x="1064.0" dy="0">LED azul · bomba (PWM)</tspan>
+</text>
+<text x="1064.0" y="489.6" fill="#1e1e1e" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" text-anchor="start">
+<tspan x="1064.0" dy="0">GPIO 17  ·  LEDC a 5 kHz</tspan>
+<tspan x="1064.0" dy="20.0">Duty 0 a 100 %  ·  resistencia 330 Ω</tspan>
+</text>
+<rect x="1048.0" y="577.0" width="460.0" height="123.0" rx="12" fill="#c3fae8" stroke="#087f5b" stroke-width="2"/>
+<text x="1064.0" y="606.0" fill="#087f5b" font-family="Segoe UI, Arial, sans-serif" font-size="20" font-weight="700" text-anchor="start">
+<tspan x="1064.0" dy="0">DAC · nivel en tensión</tspan>
+</text>
+<text x="1064.0" y="632.6" fill="#1e1e1e" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" text-anchor="start">
+<tspan x="1064.0" dy="0">GPIO 25  ·  DAC1, 8 bits</tspan>
+<tspan x="1064.0" dy="20.0">0 cm → 0    ·    200 cm → 255</tspan>
+</text>
+<line x1="448.0" y1="232.0" x2="508.0" y2="232.0" stroke="#1971c2" stroke-width="2.5" marker-end="url(#arrow)"/>
+<line x1="448.0" y1="424.0" x2="508.0" y2="424.0" stroke="#1971c2" stroke-width="2.5" marker-end="url(#arrow)"/>
+<line x1="448.0" y1="616.0" x2="508.0" y2="616.0" stroke="#1971c2" stroke-width="2.5" marker-end="url(#arrow)"/>
+<line x1="988.0" y1="209.0" x2="1048.0" y2="209.0" stroke="#495057" stroke-width="2.5" marker-end="url(#arrow)"/>
+<line x1="988.0" y1="352.0" x2="1048.0" y2="352.0" stroke="#495057" stroke-width="2.5" marker-end="url(#arrow)"/>
+<line x1="988.0" y1="495.0" x2="1048.0" y2="495.0" stroke="#495057" stroke-width="2.5" marker-end="url(#arrow)"/>
+<line x1="988.0" y1="638.0" x2="1048.0" y2="638.0" stroke="#495057" stroke-width="2.5" marker-end="url(#arrow)"/>
+</svg>

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Transiciones — Control de nivel</title>
+<style>
+  :root {
+    --ink: #1c1917;
+    --muted: #57534e;
+    --line: #d6d3d1;
+    --green: #1a4332;
+    --paper: #f7f5f1;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--paper); color: var(--ink);
+    font-family: "Segoe UI", Calibri, sans-serif; line-height: 1.35;
+  }
+  main { max-width: 1120px; margin: 0 auto; padding: 32px 28px 64px; }
+  header.top { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; border-bottom: 3px solid var(--green); padding-bottom: 12px; }
+  h1 { font-family: Georgia, "Palatino Linotype", serif; font-weight: normal; font-size: 34px; margin: 0; }
+  h2 { font-size: 22px; margin: 36px 0 10px; color: var(--green); }
+  p { font-size: 18px; margin: 0 0 10px; }
+  .sub { color: var(--muted); font-size: 16px; margin: 6px 0 0; }
+  .sheet { background: white; border: 1px solid var(--line); border-radius: 12px; padding: 18px 18px 8px; margin-top: 12px; }
+  .flow { display: grid; grid-template-columns: 1fr 28px 1fr 28px 1.15fr 28px 1fr; align-items: center; gap: 0; }
+  .node { border: 2px solid #1c1917; border-radius: 8px; padding: 10px 12px; background: #fff; min-height: 92px; }
+  .node b { display: block; font-size: 16px; margin-bottom: 4px; }
+  .node span, .eq { font-family: Consolas, "Cascadia Mono", monospace; font-size: 15px; }
+  .node small { display: block; margin-top: 4px; color: var(--muted); font-size: 14px; }
+  .arr { text-align: center; font-size: 26px; color: var(--green); }
+  .fork { display: grid; grid-template-columns: 1.2fr 1fr; gap: 16px; margin-top: 14px; }
+  .dac { border: 2px solid #087f5b; background: #e7f6f1; border-radius: 8px; padding: 12px 14px; }
+  .dac b { display: block; margin-bottom: 4px; }
+  .ladder { width: 100%; border-collapse: collapse; font-size: 17px; }
+  .ladder th, .ladder td { border-bottom: 1px solid var(--line); padding: 9px 10px; text-align: left; vertical-align: middle; }
+  .ladder th { font-size: 14px; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); font-weight: 650; }
+  .ladder tr.hit td:first-child { font-weight: 700; }
+  .tag { display: inline-block; min-width: 52px; text-align: center; border-radius: 4px; padding: 2px 6px; font-weight: 700; }
+  .z100 { background: #d8efe4; }
+  .z75 { background: #e5f5d6; }
+  .z50 { background: #f3f6c8; }
+  .z25 { background: #f8efc6; }
+  .z0 { background: #f3e6c4; }
+  .zA { background: #f8d9d4; }
+  .zD { background: #e7e5e4; }
+  svg.fig { width: 100%; height: auto; display: block; }
+  .legend { display: flex; flex-wrap: wrap; gap: 8px 14px; margin: 8px 0 4px; font-size: 15px; }
+  .legend i { display: inline-block; width: 14px; height: 14px; border-radius: 3px; margin-right: 6px; vertical-align: -2px; }
+  .note { font-size: 16px; color: #44403c; }
+  code { font-family: Consolas, "Cascadia Mono", monospace; font-size: .95em; }
+  @media print {
+    body { background: white; }
+    main { max-width: none; }
+    .sheet { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <header class="top">
+    <div>
+      <h1>Transiciones del control de nivel</h1>
+      <p class="sub">Ejercicio 2 · ESP32 · Nicolás Muñoz y Fredy Garcia</p>
+    </div>
+    <p class="sub">Cada 150 ms se vuelve a clasificar.<br>Lo único que queda guardado es <code>habilitado</code>.</p>
+  </header>
+
+  <h2>1. De la pata del chip a la salida</h2>
+  <div class="sheet">
+    <div class="flow">
+      <div class="node">
+        <b>GPIO 34 · ADC1 ch 6</b>
+        <span>raw_L = 0 … 4095</span>
+        <small>atenuación 11 dB · 0 a 3,3 V</small>
+      </div>
+      <div class="arr">→</div>
+      <div class="node">
+        <b>Nivel L</b>
+        <span>L = raw_L / 4095 × 200</span>
+        <small>centímetros · 0 a 200</small>
+      </div>
+      <div class="arr">→</div>
+      <div class="node">
+        <b>Clasificador</b>
+        <span>entra L, SP y habilitado</span>
+        <small>sale la primera condición que se cumple</small>
+      </div>
+      <div class="arr">→</div>
+      <div class="node">
+        <b>Actuadores</b>
+        <span>GPIO 4 verde</span><br>
+        <span>GPIO 2 rojo</span><br>
+        <span>GPIO 17 PWM</span>
+      </div>
+    </div>
+    <div class="fork">
+      <div class="node">
+        <b>GPIO 35 · ADC1 ch 7</b>
+        <span>SP = 50 + raw_SP / 4095 × 130</span>
+        <small>centímetros · 50 a 180 · entra al mismo clasificador</small>
+      </div>
+      <div class="dac">
+        <b>GPIO 25 · DAC1, en paralelo</b>
+        <span class="eq">DAC = int(L / 200 × 255)</span>
+        <small style="display:block;margin-top:4px;color:#44403c;">Sigue al nivel en todo momento: 0 cm → 0, 100 cm → 127, 200 cm → 255. No pasa por las zonas de la bomba.</small>
+      </div>
+    </div>
+    <p class="note" style="margin-top:12px;">GPIO 18, con pull-up, se lee en bajo al oprimir. Un flanco de bajada con más de 200 ms desde el anterior invierte <code>habilitado</code>.</p>
+  </div>
+
+  <h2>2. Orden en que se prueban las condiciones</h2>
+  <p>En cada vuelta gana la primera fila que resulta verdadera. Las de abajo no se miran.</p>
+  <div class="sheet">
+    <table class="ladder">
+      <thead>
+        <tr><th>Orden</th><th>Condición</th><th>PWM</th><th>Verde</th><th>Rojo</th></tr>
+      </thead>
+      <tbody>
+        <tr class="hit"><td>1</td><td class="zD">habilitado = falso</td><td>0 %</td><td>OFF</td><td>OFF</td></tr>
+        <tr class="hit"><td>2</td><td class="zA">L &gt; 190</td><td>0 %</td><td>ON</td><td>ON</td></tr>
+        <tr><td>3</td><td class="z0">L ≥ SP</td><td>0 %</td><td>ON</td><td>OFF</td></tr>
+        <tr><td>4</td><td class="z25">SP − 10 ≤ L &lt; SP</td><td>25 %</td><td>ON</td><td>OFF</td></tr>
+        <tr><td>5</td><td class="z50">SP − 30 ≤ L &lt; SP − 10</td><td>50 %</td><td>ON</td><td>OFF</td></tr>
+        <tr><td>6</td><td class="z75">SP − 60 ≤ L &lt; SP − 30</td><td>75 %</td><td>ON</td><td>OFF</td></tr>
+        <tr><td>7</td><td class="z100">L &lt; SP − 60</td><td>100 %</td><td>ON</td><td>OFF</td></tr>
+      </tbody>
+    </table>
+    <p class="note">El límite pertenece a la banda de arriba en la tabla: L = SP − 60 ya es 75 %, L = SP ya es 0 %, L = 190 todavía es la fila 3. La alarma empieza justo después de 190 cm, porque la comparación es L &gt; 190. Si en ese momento se deshabilita el sistema, gana la fila 1: PWM en 0 % y los dos LED apagados, aunque L siga por encima de 190 cm.</p>
+  </div>
+
+  <h2>3. Dónde queda cada zona en el tanque</h2>
+  <p>Ejemplo con SP = 120 cm. Los cuatro cortes de la izquierda se mueven si se gira el potenciómetro de consigna. El corte de 190 cm no se mueve.</p>
+  <div class="sheet">
+    <div class="legend">
+      <span><i style="background:#1e7a4a"></i>100 %</span>
+      <span><i style="background:#5ea84a"></i>75 %</span>
+      <span><i style="background:#b5c43a"></i>50 %</span>
+      <span><i style="background:#e0b43a"></i>25 %</span>
+      <span><i style="background:#c48a3a"></i>0 % · rojo OFF</span>
+      <span><i style="background:#a33b32"></i>alarma · rojo ON</span>
+    </div>
+    <svg class="fig" viewBox="0 0 1040 250" role="img" aria-label="Eje de nivel de 0 a 200 cm con SP en 120">
+      <rect x="48" y="78" width="288" height="52" fill="#1e7a4a"/>
+      <rect x="336" y="78" width="144" height="52" fill="#5ea84a"/>
+      <rect x="480" y="78" width="96" height="52" fill="#b5c43a"/>
+      <rect x="576" y="78" width="48" height="52" fill="#e0b43a"/>
+      <rect x="624" y="78" width="336" height="52" fill="#c48a3a"/>
+      <rect x="960" y="78" width="48" height="52" fill="#a33b32"/>
+      <text x="192" y="110" text-anchor="middle" fill="#fff" font-size="18" font-family="Segoe UI, sans-serif">100 %</text>
+      <text x="408" y="110" text-anchor="middle" fill="#fff" font-size="18" font-family="Segoe UI, sans-serif">75 %</text>
+      <text x="528" y="110" text-anchor="middle" fill="#1c1917" font-size="16" font-family="Segoe UI, sans-serif">50 %</text>
+      <text x="792" y="110" text-anchor="middle" fill="#fff" font-size="18" font-family="Segoe UI, sans-serif">0 %</text>
+      <text x="600" y="62" text-anchor="middle" fill="#1c1917" font-size="15" font-family="Segoe UI, sans-serif">25 %</text>
+      <text x="984" y="62" text-anchor="middle" fill="#a33b32" font-size="15" font-family="Segoe UI, sans-serif">alarma</text>
+      <g fill="#1c1917" font-size="15" font-family="Consolas, monospace" text-anchor="middle">
+        <text x="48" y="160">0</text>
+        <text x="336" y="160">60</text>
+        <text x="480" y="160">90</text>
+        <text x="576" y="160">110</text>
+        <text x="624" y="160">120</text>
+        <text x="960" y="160">190</text>
+        <text x="1008" y="160">200</text>
+      </g>
+      <g fill="#57534e" font-size="13" font-family="Segoe UI, sans-serif" text-anchor="middle">
+        <text x="336" y="182">SP−60</text>
+        <text x="480" y="182">SP−30</text>
+        <text x="576" y="182">SP−10</text>
+        <text x="624" y="182">SP</text>
+        <text x="960" y="182">fijo</text>
+      </g>
+      <text x="520" y="220" text-anchor="middle" fill="#44403c" font-size="16" font-family="Segoe UI, sans-serif">L en cm, con SP = 120. Intervalos: [0, 60) · [60, 90) · [90, 110) · [110, 120) · [120, 190] · (190, 200]</text>
+    </svg>
+    <p class="note">Si SP baja a 50 cm, SP − 60 queda en −10. La zona de 100 % no existe: desde 0 cm el programa ya cae en 75 % o en una banda más alta.</p>
+  </div>
+
+  <h2>4. Qué evento cambia de zona</h2>
+  <p>La zona anterior no se recuerda. Cambiar de franja es volver a caer en otra fila de la tabla.</p>
+  <div class="sheet">
+    <img class="fig" src="transiciones.svg" alt="De 100 % a la alarma, y de todas esas zonas al estado deshabilitado con el pulsador">
+    <p class="note">Subir L recorre la fila hacia la derecha y la bomba baja de escalón en escalón. Subir SP mueve los cuatro cortes a la derecha: el mismo L puede pasar a una banda de más PWM sin tocar el potenciómetro de nivel. El flanco del pulsador lleva cualquier banda, incluida la alarma, a deshabilitado: el rojo se apaga aunque L siga por encima de 190 cm. Al habilitar otra vez, si L todavía supera 190 cm, se entra directo a la alarma.</p>
+  </div>
+</main>
+</body>
+</html>
